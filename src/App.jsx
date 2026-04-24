@@ -17,6 +17,9 @@ import Input from "./components/Input";
 const App = () => {
   const [message, setMessage] = useState("");
   const [posts, setPosts] = useState([]);
+  const [roomsQuery, setRoomsQuery] = useState(0);
+  const [bathroomsQuery, setBathroomsQuery] = useState(0);
+  const [squareFootageQuery, setSquareFootageQuery] = useState(0);
 
   const handleAddPost = async () => {
     try {
@@ -69,7 +72,12 @@ const App = () => {
   const queryForDocuments = async () => {
     try {
       const collectionRef = collection(db, "posts");
-      const userQuery = query(collectionRef, where("message", "==", "nobita"));
+      const roomsInt = parseInt(roomsQuery);
+      const userQuery = query(
+        collectionRef,
+        where("rooms", "==", roomsInt),
+        limit(3),
+      );
 
       const querySnapshot = await getDocs(userQuery);
       querySnapshot.forEach((doc) => console.log(doc.id, " => ", doc.data()));
@@ -103,12 +111,45 @@ const App = () => {
           </div>
           <div className="flex flex-col items-center mt-8 text-white gap-5">
             <h2>Query</h2>
+            <div className="flex justify-center">
+              <h3>Rooms</h3>
+              <input
+                type="number"
+                name="roomsQuery"
+                id="roomsQuery"
+                value={roomsQuery}
+                onChange={(e) => setRoomsQuery(e.target.value)}
+                className="bg-white px-5 border-2 border-blue-300 text-black"
+              />
+            </div>
+            <div className="flex justify-center">
+              <h3>Bathrooms</h3>
+              <input
+                type="number"
+                name="bathroomsQuery"
+                id="bathroomsQuery"
+                value={bathroomsQuery}
+                onChange={(e) => setBathroomsQuery(e.target.value)}
+                className="bg-white px-5 border-2 border-blue-300 text-black"
+              />
+            </div>
+            <div className="flex justify-center">
+              <h3>Square Footage</h3>
+              <input
+                type="number"
+                name="squareFootageQuery"
+                id="squareFootageQuery"
+                value={squareFootageQuery}
+                onChange={(e) => setSquareFootageQuery(e.target.value)}
+                className="bg-white px-5 border-2 border-blue-300 text-black"
+              />
+            </div>
             <button
               type="submit"
               onClick={queryForDocuments}
               className="bg-white px-5 hover:cursor-pointer border-blue-300 text-black border-2"
             >
-              Query for documents
+              Search
             </button>
           </div>
           <div className="flex flex-col items-center mt-8 text-white gap-5">
