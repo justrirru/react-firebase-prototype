@@ -5,6 +5,9 @@ import {
   getDocs,
   deleteDoc,
   updateDoc,
+  query,
+  where,
+  limit,
 } from "firebase/firestore";
 import React from "react";
 import { db } from "./firebase";
@@ -63,6 +66,18 @@ const App = () => {
     }
   };
 
+  const queryForDocuments = async () => {
+    try {
+      const collectionRef = collection(db, "posts");
+      const userQuery = query(collectionRef, where("message", "==", "nobita"));
+
+      const querySnapshot = await getDocs(userQuery);
+      querySnapshot.forEach((doc) => console.log(doc.id, " => ", doc.data()));
+    } catch (error) {
+      console.error("Error querying documents: ", error);
+    }
+  };
+
   return (
     <main>
       <div>
@@ -84,6 +99,16 @@ const App = () => {
               className="bg-white px-5 hover:cursor-pointer border-blue-300 border-2"
             >
               Add post
+            </button>
+          </div>
+          <div className="flex flex-col items-center mt-8 text-white gap-5">
+            <h2>Query</h2>
+            <button
+              type="submit"
+              onClick={queryForDocuments}
+              className="bg-white px-5 hover:cursor-pointer border-blue-300 text-black border-2"
+            >
+              Query for documents
             </button>
           </div>
           <div className="flex flex-col items-center mt-8 text-white gap-5">
