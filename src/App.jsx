@@ -4,10 +4,12 @@ import {
   addDoc,
   getDocs,
   deleteDoc,
+  updateDoc,
 } from "firebase/firestore";
 import React from "react";
 import { db } from "./firebase";
 import { useState, useEffect } from "react";
+import Input from "./components/Input";
 
 const App = () => {
   const [message, setMessage] = useState("");
@@ -19,6 +21,12 @@ const App = () => {
       await addDoc(postRef, {
         message,
       });
+      setPosts((prev) => [
+        ...prev,
+        {
+          id: (Math.random(), message),
+        },
+      ]);
     } catch (error) {
       console.error("Error adding post: ", error);
     }
@@ -91,6 +99,7 @@ const App = () => {
                   >
                     Delete
                   </button>
+                  <Input postId={post.id} />
                 </div>
               );
             })}
