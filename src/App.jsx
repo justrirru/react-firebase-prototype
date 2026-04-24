@@ -1,4 +1,10 @@
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import {
+  doc,
+  collection,
+  addDoc,
+  getDocs,
+  deleteDoc,
+} from "firebase/firestore";
 import React from "react";
 import { db } from "./firebase";
 import { useState, useEffect } from "react";
@@ -38,6 +44,17 @@ const App = () => {
     getPosts();
   }, []);
 
+  const handleDeletePost = async (id) => {
+    try {
+      const docRef = doc(db, "posts", id);
+      await deleteDoc(docRef);
+      const newPosts = posts.filter((post) => post.id !== id);
+      setPosts(newPosts);
+    } catch (error) {
+      console.error("Error deleting post: ", error);
+    }
+  };
+
   return (
     <main>
       <div>
@@ -56,17 +73,24 @@ const App = () => {
             <button
               type="submit"
               onClick={handleAddPost}
-              className="bg-white px-5 hover:cursor-pointer"
+              className="bg-white px-5 hover:cursor-pointer border-blue-300 border-2"
             >
               Add post
             </button>
           </div>
-          <div className="flex flex-col items-center mt-8 text-white">
-            <h2 className="mb-4">Listings</h2>
+          <div className="flex flex-col items-center mt-8 text-white gap-5">
+            <h2>Listings</h2>
             {posts.map((post) => {
               return (
-                <div key={post.id}>
-                  <h3>{post.message}</h3>
+                <div key={post.id} className="flex justify-center gap-2">
+                  <p>{post.message}</p>
+                  <button
+                    type="submit"
+                    onClick={() => handleDeletePost(post.id)}
+                    className="bg-red-600 px-5 hover:cursor-pointer text-white"
+                  >
+                    Delete
+                  </button>
                 </div>
               );
             })}
