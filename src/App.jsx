@@ -72,16 +72,35 @@ const App = () => {
   const queryForDocuments = async () => {
     try {
       const collectionRef = collection(db, "posts");
+
+      // 1. Convert all inputs to integers
       const roomsInt = parseInt(roomsQuery);
-      const userQuery = query(
-        collectionRef,
+      const bathroomsInt = parseInt(bathroomsQuery);
+      const sqftInt = parseInt(squareFootageQuery);
+
+      // 2. Start with a base query (including your limit)
+      let userQuery = query(collectionRef, limit(3));
+
+      // 3. Conditionally add filters based on user input
+      userQuery = query(
+        userQuery,
         where("rooms", "==", roomsInt),
-        limit(3),
+        where("bathrooms", "==", bathroomsInt),
+        where("squareFootage", ">=", sqftInt),
       );
 
       const querySnapshot = await getDocs(userQuery);
-      querySnapshot.forEach((doc) => console.log(doc.id, " => ", doc.data()));
+
+      if (querySnapshot.empty) {
+        console.log("No matching documents found.");
+        return;
+      }
+
+      querySnapshot.forEach((doc) => {
+        console.log(doc.id, " => ", doc.data());
+      });
     } catch (error) {
+      // If you use multiple filters, check the console for the auto-index link!
       console.error("Error querying documents: ", error);
     }
   };
