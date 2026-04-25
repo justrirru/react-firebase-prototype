@@ -17,9 +17,11 @@ import Input from "./components/Input";
 const App = () => {
   const [message, setMessage] = useState("");
   const [posts, setPosts] = useState([]);
+
   const [roomsQuery, setRoomsQuery] = useState(0);
   const [bathroomsQuery, setBathroomsQuery] = useState(0);
   const [squareFootageQuery, setSquareFootageQuery] = useState(0);
+  const [queryResults, setQueryResults] = useState([]);
 
   const handleAddPost = async () => {
     try {
@@ -70,6 +72,7 @@ const App = () => {
   };
 
   const queryForDocuments = async () => {
+    setQueryResults([]); // Clear previous results
     try {
       const collectionRef = collection(db, "posts");
 
@@ -96,9 +99,13 @@ const App = () => {
         return;
       }
 
-      querySnapshot.forEach((doc) => {
-        console.log(doc.id, " => ", doc.data());
-      });
+      // Map data and update your specific state
+      const results = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      setQueryResults(results);
     } catch (error) {
       // If you use multiple filters, check the console for the auto-index link!
       console.error("Error querying documents: ", error);
@@ -153,7 +160,7 @@ const App = () => {
               />
             </div>
             <div className="flex justify-center">
-              <h3>Square Footage</h3>
+              <h3>Minimum Square Footage</h3>
               <input
                 type="number"
                 name="squareFootageQuery"
@@ -170,9 +177,41 @@ const App = () => {
             >
               Search
             </button>
+            <div>
+              {queryResults.length > 0 ? (
+                queryResults.map((doc) => (
+                  <div
+                    key={doc.id}
+                    style={{
+                      border: "1px solid #ddd",
+                      padding: "10px",
+                      margin: "5px",
+                    }}
+                  >
+                    <p>
+                      <strong>ID:</strong> {doc.message}
+                    </p>
+                    <p>
+                      <strong>ID:</strong> {doc.id}
+                    </p>
+                    <p>
+                      <strong>Rooms:</strong> {doc.rooms}
+                    </p>
+                    <p>
+                      <strong>Bathrooms:</strong> {doc.bathrooms}
+                    </p>
+                    <p>
+                      <strong>Square Footage:</strong> {doc.squareFootage}
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <p>No results found.</p>
+              )}
+            </div>
           </div>
-          <div className="flex flex-col items-center mt-8 text-white gap-5">
-            <h2>Listings</h2>
+          <div className="flex flex-col items-center mt-80 text-white gap-5">
+            <h2>Experimental Data (Don't Mind)</h2>
             {posts.map((post) => {
               return (
                 <div key={post.id} className="flex justify-center gap-2">
