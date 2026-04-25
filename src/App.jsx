@@ -114,7 +114,7 @@ const App = () => {
 
   return (
     <main>
-      <div>
+      <div className="max-w-7xl flex flex-col justify-center mx-auto px-5 py-12 xs:p-10">
         <header>
           <h1>React-Firebase Prototype</h1>
           <div className="flex justify-center mt-8">
@@ -177,7 +177,7 @@ const App = () => {
             >
               Search
             </button>
-            <div className="flex gap-6 flex-wrap justify-center max-w-7xl">
+            <div className="flex gap-6 flex-wrap justify-center">
               {queryResults.length > 0 ? (
                 queryResults.map((doc) => (
                   <div
