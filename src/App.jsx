@@ -177,7 +177,7 @@ const App = () => {
             >
               Search
             </button>
-            <div>
+            <div className="flex gap-6 flex-wrap justify-center max-w-7xl">
               {queryResults.length > 0 ? (
                 queryResults.map((doc) => (
                   <div
@@ -188,20 +188,26 @@ const App = () => {
                       margin: "5px",
                     }}
                   >
+                    <div
+                      id="fake-image"
+                      className="bg-gray-500 w-full h-[150px] mb-2"
+                    ></div>
+                    <p className="mb-2">
+                      <strong>{doc.message}</strong>
+                    </p>
+                    <div className="flex gap-2">
+                      <p>
+                        <strong>Rooms:</strong> {doc.rooms}
+                      </p>
+                      <p>
+                        <strong>Bathrooms:</strong> {doc.bathrooms}
+                      </p>
+                    </div>
                     <p>
-                      <strong>ID:</strong> {doc.message}
+                      <strong>Square Footage:</strong> {doc.squareFootage} sqft
                     </p>
                     <p>
                       <strong>ID:</strong> {doc.id}
-                    </p>
-                    <p>
-                      <strong>Rooms:</strong> {doc.rooms}
-                    </p>
-                    <p>
-                      <strong>Bathrooms:</strong> {doc.bathrooms}
-                    </p>
-                    <p>
-                      <strong>Square Footage:</strong> {doc.squareFootage}
                     </p>
                   </div>
                 ))
