@@ -16,6 +16,9 @@ import Input from "./components/Input";
 
 const App = () => {
   const [message, setMessage] = useState("");
+  const [rooms, setRooms] = useState("");
+  const [bathrooms, setBathrooms] = useState("");
+  const [squareFootage, setSquareFootage] = useState("");
   const [posts, setPosts] = useState([]);
 
   const [roomsQuery, setRoomsQuery] = useState(0);
@@ -28,11 +31,14 @@ const App = () => {
       const postRef = collection(db, "posts");
       await addDoc(postRef, {
         message,
+        rooms: Number(rooms),
+        bathrooms: Number(bathrooms),
+        squareFootage: Number(squareFootage),
       });
       setPosts((prev) => [
         ...prev,
         {
-          id: (Math.random(), message),
+          id: (Math.random(), message, rooms, bathrooms, squareFootage),
         },
       ]);
     } catch (error) {
@@ -113,29 +119,56 @@ const App = () => {
   };
 
   return (
-    <main>
+    <main className="bg-white">
       <div className="max-w-7xl flex flex-col justify-center mx-auto px-5 py-12 xs:p-10">
         <header>
           <h1>React-Firebase Prototype</h1>
-          <div className="flex justify-center mt-8">
+          <div className="flex flex-col mt-8 items-center self-center gap-2">
             <input
               type="text"
               name="post"
               id="post"
-              placeholder="Type something..."
+              placeholder="Name of the listing..."
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className="bg-white px-5 border-2 border-blue-300"
+              className="bg-white px-5 border-2 border-blue-300 w-full max-w-xl sm:max-w-2xl"
+            />
+            <input
+              type="number"
+              name="rooms"
+              id="rooms"
+              placeholder="Number of rooms..."
+              value={rooms}
+              onChange={(e) => setRooms(e.target.value)}
+              className="bg-white px-5 border-2 border-blue-300 w-full max-w-xl sm:max-w-2xl"
+            />
+            <input
+              type="number"
+              name="bathrooms"
+              id="bathrooms"
+              placeholder="Number of bathrooms..."
+              value={bathrooms}
+              onChange={(e) => setBathrooms(e.target.value)}
+              className="bg-white px-5 border-2 border-blue-300 w-full max-w-xl sm:max-w-2xl"
+            />
+            <input
+              type="number"
+              name="squareFootage"
+              id="squareFootage"
+              placeholder="Square footage..."
+              value={squareFootage}
+              onChange={(e) => setSquareFootage(e.target.value)}
+              className="bg-white px-5 border-2 border-blue-300 w-full max-w-xl sm:max-w-2xl"
             />
             <button
               type="submit"
               onClick={handleAddPost}
-              className="bg-white px-5 hover:cursor-pointer border-blue-300 border-2"
+              className="bg-[#520504] py-2 hover:cursor-pointer text-white w-full max-w-xl sm:max-w-2xl"
             >
-              Add post
+              Add listing
             </button>
           </div>
-          <div className="flex flex-col items-center mt-8 text-white gap-5">
+          <div className="flex flex-col items-center mt-8 gap-5">
             <h2>Query</h2>
             <div className="flex justify-center">
               <h3>Rooms</h3>
@@ -173,7 +206,7 @@ const App = () => {
             <button
               type="submit"
               onClick={queryForDocuments}
-              className="bg-white px-5 hover:cursor-pointer border-blue-300 text-black border-2"
+              className="bg-[#520504] py-2 hover:cursor-pointer text-white w-full max-w-xl sm:max-w-2xl"
             >
               Search
             </button>
@@ -216,7 +249,7 @@ const App = () => {
               )}
             </div>
           </div>
-          <div className="flex flex-col items-center mt-80 text-white gap-5">
+          <div className="flex flex-col items-center mt-80 gap-5">
             <h2>Experimental Data (Don't Mind)</h2>
             {posts.map((post) => {
               return (
